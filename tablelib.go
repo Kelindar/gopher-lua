@@ -4,6 +4,7 @@ import (
 	"sort"
 )
 
+// OpenTable ...
 func OpenTable(L *LState) int {
 	tabmod := L.RegisterModule(TabLibName, tableFuncs)
 	L.Push(tabmod)

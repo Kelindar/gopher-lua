@@ -29,16 +29,12 @@ type luaLib struct {
 }
 
 var luaLibs = []luaLib{
-	luaLib{LoadLibName, OpenPackage},
-	luaLib{BaseLibName, OpenBase},
-	luaLib{TabLibName, OpenTable},
-	luaLib{IoLibName, OpenIo},
-	luaLib{OsLibName, OpenOs},
-	luaLib{StringLibName, OpenString},
-	luaLib{MathLibName, OpenMath},
-	luaLib{DebugLibName, OpenDebug},
-	luaLib{ChannelLibName, OpenChannel},
-	luaLib{CoroutineLibName, OpenCoroutine},
+	{LoadLibName, OpenPackage},
+	{BaseLibName, OpenBase},
+	{TabLibName, OpenTable},
+	{StringLibName, OpenString},
+	{MathLibName, OpenMath},
+	{CoroutineLibName, OpenCoroutine},
 }
 
 // OpenLibs loads the built-in libraries. It is equivalent to running OpenLoad,

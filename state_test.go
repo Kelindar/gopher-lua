@@ -342,12 +342,9 @@ func TestContextTimeout(t *testing.T) {
 	L.SetContext(ctx)
 	errorIfNotEqual(t, ctx, L.Context())
 	err := L.DoString(`
-	  local clock = os.clock
-      function sleep(n)  -- seconds
-        local t0 = clock()
-        while clock() - t0 <= n do end
-      end
-	  sleep(3)
+	while true do
+    	-- forever
+    end
 	`)
 	errorIfNil(t, err)
 	errorIfFalse(t, strings.Contains(err.Error(), "context deadline exceeded"), "execution must be canceled")
@@ -365,12 +362,9 @@ func TestContextCancel(t *testing.T) {
 	L.SetContext(ctx)
 	go func() {
 		errch <- L.DoString(`
-	    local clock = os.clock
-        function sleep(n)  -- seconds
-          local t0 = clock()
-          while clock() - t0 <= n do end
-        end
-	    sleep(3)
+		while true do
+			-- forever
+		end
 	  `)
 	}()
 	time.Sleep(1 * time.Second)

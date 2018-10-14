@@ -9,32 +9,13 @@ import (
 
 const maxMemory = 40
 
-var gluaTests []string = []string{
+var gluaTests = []string{
 	"base.lua",
 	"coroutine.lua",
-	"db.lua",
-	"issues.lua",
-	"os.lua",
 	"table.lua",
 	"vm.lua",
-	"math.lua",
 	"strings.lua",
-}
-
-var luaTests []string = []string{
-	"attrib.lua",
-	"calls.lua",
-	"closure.lua",
-	"constructs.lua",
-	"events.lua",
-	"literals.lua",
-	"locals.lua",
 	"math.lua",
-	"sort.lua",
-	"strings.lua",
-	"vararg.lua",
-	"pm.lua",
-	"files.lua",
 }
 
 func testScriptCompile(t *testing.T, script string) {
@@ -80,9 +61,5 @@ func testScriptDir(t *testing.T, tests []string, directory string) {
 }
 
 func TestGlua(t *testing.T) {
-	testScriptDir(t, gluaTests, "_glua-tests")
-}
-
-func TestLua(t *testing.T) {
-	testScriptDir(t, luaTests, "_lua5.1-tests")
+	testScriptDir(t, gluaTests, "tests")
 }

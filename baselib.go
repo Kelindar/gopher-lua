@@ -3,7 +3,6 @@ package lua
 import (
 	"fmt"
 	"io"
-	"os"
 	"runtime"
 	"strconv"
 	"strings"
@@ -11,6 +10,7 @@ import (
 
 /* basic functions {{{ */
 
+// OpenBase ...
 func OpenBase(L *LState) int {
 	global := L.Get(GlobalsIndex).(*LTable)
 	L.SetGlobal("_G", global)
@@ -24,30 +24,28 @@ func OpenBase(L *LState) int {
 }
 
 var baseFuncs = map[string]LGFunction{
-	"assert":         baseAssert,
-	"collectgarbage": baseCollectGarbage,
-	"dofile":         baseDoFile,
-	"error":          baseError,
-	"getfenv":        baseGetFEnv,
-	"getmetatable":   baseGetMetatable,
-	"load":           baseLoad,
-	"loadfile":       baseLoadFile,
-	"loadstring":     baseLoadString,
-	"next":           baseNext,
-	"pcall":          basePCall,
-	"print":          basePrint,
-	"rawequal":       baseRawEqual,
-	"rawget":         baseRawGet,
-	"rawset":         baseRawSet,
-	"select":         baseSelect,
-	"_printregs":     base_PrintRegs,
-	"setfenv":        baseSetFEnv,
-	"setmetatable":   baseSetMetatable,
-	"tonumber":       baseToNumber,
-	"tostring":       baseToString,
-	"type":           baseType,
-	"unpack":         baseUnpack,
-	"xpcall":         baseXPCall,
+	"assert":       baseAssert,
+	"dofile":       baseDoFile,
+	"error":        baseError,
+	"getfenv":      baseGetFEnv,
+	"getmetatable": baseGetMetatable,
+	"load":         baseLoad,
+	"loadstring":   baseLoadString,
+	"next":         baseNext,
+	"pcall":        basePCall,
+	"print":        basePrint,
+	"rawequal":     baseRawEqual,
+	"rawget":       baseRawGet,
+	"rawset":       baseRawSet,
+	"select":       baseSelect,
+	"_printregs":   base_PrintRegs,
+	"setfenv":      baseSetFEnv,
+	"setmetatable": baseSetMetatable,
+	"tonumber":     baseToNumber,
+	"tostring":     baseToString,
+	"type":         baseType,
+	"unpack":       baseUnpack,
+	"xpcall":       baseXPCall,
 	// loadlib
 	"module":  loModule,
 	"require": loRequire,
@@ -139,13 +137,13 @@ func ipairsaux(L *LState) int {
 	v := tb.RawGetInt(i)
 	if v == LNil {
 		return 0
-	} else {
-		L.Pop(1)
-		L.Push(LNumber(i))
-		L.Push(LNumber(i))
-		L.Push(v)
-		return 2
 	}
+
+	L.Pop(1)
+	L.Push(LNumber(i))
+	L.Push(LNumber(i))
+	L.Push(v)
+	return 2
 }
 
 func baseIpairs(L *LState) int {
@@ -195,26 +193,6 @@ func baseLoad(L *LState) int {
 	return loadaux(L, strings.NewReader(strings.Join(buf, "")), chunkname)
 }
 
-func baseLoadFile(L *LState) int {
-	var reader io.Reader
-	var chunkname string
-	var err error
-	if L.GetTop() < 1 {
-		reader = os.Stdin
-		chunkname = "<stdin>"
-	} else {
-		chunkname = L.CheckString(1)
-		reader, err = os.Open(chunkname)
-		if err != nil {
-			L.Push(LNil)
-			L.Push(LString(fmt.Sprintf("can not open file: %v", chunkname)))
-			return 2
-		}
-		defer reader.(*os.File).Close()
-	}
-	return loadaux(L, reader, chunkname)
-}
-
 func baseLoadString(L *LState) int {
 	return loadaux(L, strings.NewReader(L.CheckString(1)), L.OptString(2, "<string>"))
 }
@@ -240,13 +218,12 @@ func pairsaux(L *LState) int {
 	key, value := tb.Next(L.Get(2))
 	if key == LNil {
 		return 0
-	} else {
-		L.Pop(1)
-		L.Push(key)
-		L.Push(key)
-		L.Push(value)
-		return 2
 	}
+	L.Pop(1)
+	L.Push(key)
+	L.Push(key)
+	L.Push(value)
+	return 2
 }
 
 func basePairs(L *LState) int {

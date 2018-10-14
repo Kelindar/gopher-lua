@@ -14,17 +14,15 @@ import (
 func intMin(a, b int) int {
 	if a < b {
 		return a
-	} else {
-		return b
 	}
+	return b
 }
 
 func intMax(a, b int) int {
 	if a > b {
 		return a
-	} else {
-		return b
 	}
+	return b
 }
 
 func defaultFormat(v interface{}, f fmt.State, c rune) {
@@ -132,8 +130,6 @@ func strftime(t time.Time, cfmt string) string {
 
 func isInteger(v LNumber) bool {
 	return float64(v) == float64(int64(v))
-	//_, frac := math.Modf(float64(v))
-	//return frac == 0.0
 }
 
 func isArrayKey(v LNumber) bool {

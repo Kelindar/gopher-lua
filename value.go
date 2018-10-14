@@ -26,21 +26,20 @@ func (vt LValueType) String() string {
 	return lValueNames[int(vt)]
 }
 
+// LValue represents LUA value contract
 type LValue interface {
 	String() string
 	Type() LValueType
-	// to reduce `runtime.assertI2T2` costs, this method should be used instead of the type assertion in heavy paths(typically inside the VM).
+
 	assertFloat64() (float64, bool)
-	// to reduce `runtime.assertI2T2` costs, this method should be used instead of the type assertion in heavy paths(typically inside the VM).
 	assertString() (string, bool)
-	// to reduce `runtime.assertI2T2` costs, this method should be used instead of the type assertion in heavy paths(typically inside the VM).
 	assertFunction() (*LFunction, bool)
 }
 
 // LVIsFalse returns true if a given LValue is a nil or false otherwise false.
 func LVIsFalse(v LValue) bool { return v == LNil || v == LFalse }
 
-// LVIsFalse returns false if a given LValue is a nil or false otherwise true.
+// LVAsBool returns false if a given LValue is a nil or false otherwise true.
 func LVAsBool(v LValue) bool { return v != LNil && v != LFalse }
 
 // LVAsString returns string representation of a given LValue
