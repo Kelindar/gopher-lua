@@ -25,7 +25,6 @@ func OpenBase(L *LState) int {
 
 var baseFuncs = map[string]LGFunction{
 	"assert":       baseAssert,
-	"dofile":       baseDoFile,
 	"error":        baseError,
 	"getfenv":      baseGetFEnv,
 	"getmetatable": baseGetMetatable,
@@ -45,7 +44,6 @@ var baseFuncs = map[string]LGFunction{
 	"tostring":     baseToString,
 	"type":         baseType,
 	"unpack":       baseUnpack,
-	"xpcall":       baseXPCall,
 	// loadlib
 	"module":  loModule,
 	"require": loRequire,
@@ -64,19 +62,6 @@ func baseAssert(L *LState) int {
 func baseCollectGarbage(L *LState) int {
 	runtime.GC()
 	return 0
-}
-
-func baseDoFile(L *LState) int {
-	src := L.ToString(1)
-	top := L.GetTop()
-	fn, err := L.LoadFile(src)
-	if err != nil {
-		L.Push(LString(err.Error()))
-		L.Panic(L)
-	}
-	L.Push(fn)
-	L.Call(0, MultRet)
-	return L.GetTop() - top
 }
 
 func baseError(L *LState) int {
@@ -421,26 +406,6 @@ func baseUnpack(L *LState) int {
 		return 0
 	}
 	return ret
-}
-
-func baseXPCall(L *LState) int {
-	fn := L.CheckFunction(1)
-	errfunc := L.CheckFunction(2)
-
-	top := L.GetTop()
-	L.Push(fn)
-	if err := L.PCall(0, MultRet, errfunc); err != nil {
-		L.Push(LFalse)
-		if aerr, ok := err.(*ApiError); ok {
-			L.Push(aerr.Object)
-		} else {
-			L.Push(LString(err.Error()))
-		}
-		return 2
-	} else {
-		L.Insert(LTrue, top+1)
-		return L.GetTop() - top
-	}
 }
 
 /* }}} */

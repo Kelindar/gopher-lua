@@ -1,9 +1,4 @@
 local ok, msg = pcall(function()
-  dofile("notexist")
-end)
-assert(not ok and string.find(msg, ".*notexist.*"))
-
-local ok, msg = pcall(function()
   assert(getfenv(2) == _G)
 end)
 assert(ok)
@@ -30,19 +25,3 @@ local fn, msg = load(function()
   end
 end)
 assert(not fn and string.find(string.lower(msg), "eof"))
-
-local ok, a, b = xpcall(function()
-     return "a", "b"
-  end, 
-  function(err)
-     assert(nil)
-  end)
-assert(ok and a == "a" and b == "b")
-
-local ok, a, b = xpcall(function()
-     error("error!")
-  end, 
-  function(err)
-     return err .. "!", "b"
-  end)
-assert(not ok and string.find(a, "error!!") and b == nil)
